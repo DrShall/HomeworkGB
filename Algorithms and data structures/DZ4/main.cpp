@@ -15,7 +15,6 @@
 // Результатом работы должен стать один файл с кодом на языке С, содержащий
 //функцию main и четыре функции, соответствующие каждому из заданий.
 
-
 #include <iostream>
 #include <time.h>
 
@@ -31,7 +30,6 @@ void initArr(int*, int);
 int main()
 {
 	int num, deg;
-
 
 	cout << "Enter number: ";
 	cin >> num;
@@ -66,6 +64,7 @@ int main()
 	printArr(array, sizeField);
 	cout << endl;
 
+	cout << "Field of routes:" << endl;
 	for(int i = 0; i < sizeField; ++i)
 	{
 		for(int j = 0; j < sizeField; ++j)
@@ -132,7 +131,7 @@ void initArr(int* Arr, int s)
 	for(int i = 0; i < s; ++i)
 		for(int j = 0; j < s; ++j)
 		{
-			if( i == 0 || j == 0)  // Сделанные ограничения - по нулевым строке и столбцу не может быть препятствий
+			if( i == 0 || j == 0)   // Сделанные ограничения - по нулевым строке и столбцу не может быть препятствий
 				Arr[i*s+j] = 0;
 			else
 				Arr[i*s+j] = (rand() % 5 == 1) ? 1 : 0;
