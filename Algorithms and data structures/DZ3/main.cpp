@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -38,7 +39,8 @@ bool isPrime(int n)
 		return false;
 	}
 
-	for( int i = 3; i * i <= n; i+=2)   //перебираем нечетные делители до корень из n
+	double s = sqrt(n);
+	for( int i = 3; i < s; i+=2)   //перебираем нечетные делители до корень из n
 	{
 		if( n % i == 0)
 		{

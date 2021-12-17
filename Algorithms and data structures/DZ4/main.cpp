@@ -56,7 +56,6 @@ int main()
 		   " (funstion Pow2() )" << endl;
 
 	// Task3
-	// Сделанные ограничения - по нулевым строке и столбцу не может быть препятствий
 	int sizeField = 8;
 	int array[sizeField*sizeField];   //  поле препятствий
 	initArr(array, sizeField);
@@ -106,10 +105,22 @@ int Pow2(int x, int d)
 
 int routes(int row, int col, int* arr, int s)
 {
-	if(row == 0 && col == 0 || arr[row*s+col] == 1)   //если мы в начальной точке или на препятствии
+	if( (row == 0 && col == 0) || arr[row*s+col] == 1)   //если мы в начальной точке или на препятствии
 		return 0;
-	else if (row == 0 || col == 0)
-		return 1;
+	else if (row == 0)
+	{   //если предыдущая клетка не начало коор возвращаем 1, если было препятствие или нач коор то 0
+		if( routes( row, col-1, arr, s) == 0 && col != 1)
+			return 0;
+		else
+			return 1;
+	}
+	else if ( col == 0 )
+	{   //если предыдущая клетка не начало коор возвращаем 1, если было препятствие или нач коор то 0
+		if( routes( row-1, col, arr, s) == 0 && row != 1)
+			return 0;
+		else
+			return 1;
+	}
 	else   // суммируем ходы которыми мы можем прийти сверху, слева и по диагонали
 		return routes(row, col - 1, arr, s) + routes( row - 1, col, arr, s) + routes(row - 1, col -1, arr, s);
 }
@@ -131,7 +142,7 @@ void initArr(int* Arr, int s)
 	for(int i = 0; i < s; ++i)
 		for(int j = 0; j < s; ++j)
 		{
-			if( i == 0 || j == 0)   // Сделанные ограничения - по нулевым строке и столбцу не может быть препятствий
+			if( i == 0 && j == 0)
 				Arr[i*s+j] = 0;
 			else
 				Arr[i*s+j] = (rand() % 5 == 1) ? 1 : 0;
