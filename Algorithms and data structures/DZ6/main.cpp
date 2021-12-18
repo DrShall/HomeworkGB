@@ -59,7 +59,6 @@ int main()
 void bubbleSort(int** arr,int s)
 {
 	for(int i = 0; i < s*s; ++i)
-		//for(int j =0; j < s; ++j)
 		{
 			for(int j = 0; j < s*s - 1; ++j)
 			{
