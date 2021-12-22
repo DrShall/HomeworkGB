@@ -1,4 +1,3 @@
- 
 // 1. Описать в коде улучшенный алгоритм быстрой сортировки
 // 2. Сортировать в массиве целых положительных чисел только чётные числа,
 //нечётные оставив на своих местах при помощи алгоритма блочной сортировки,
@@ -31,15 +30,16 @@ int main()
 
 	//   Task 1
 
+//	sortInsert(arr, size);
+//	quickSort(arr, 0, size-1);
+	qquickSort(arr, 0, size-1);
+
 //	int a[]={0, 2, 8, 3, 4, 6, 5, 9, 8, 2, 7, 3};   //проверка примера из задания
 //	printArr(a,12);
 //	blockSort(a,12);
 //	printArr(a,12);
 
-//	sortInsert(arr, size);
-//	quickSort(arr, 0, size-1);
-//	qquickSort(arr, 0, size-1);
-	blockSort(arr, size);
+//	blockSort(arr, size);
 	printArr(arr, size);
 
 	delete [] arr;
@@ -52,12 +52,29 @@ void qquickSort(int* arr, int first, int last)
 		{
 			if(arr[first]>arr[(first+last)/2])
 				swap(arr[first], arr[(first+last)/2]);
-			else if(arr[(first+last)/2]>arr[last])
+			if(arr[(first+last)/2]>arr[last])
 				swap(arr[(first+last)/2], arr[last]);
-			else if(arr[first]>arr[(first+last)/2])
+			if(arr[first]>arr[(first+last)/2])
 				swap(arr[first], arr[(first+last)/2]);
 
-			quickSort(arr, first, last);
+			int i = first, j = last;
+			int x = arr[(first+last)/2];
+			do
+			{
+				while(arr[i] < x) i++;
+				while(arr[j] > x) j--;
+
+				if(i<=j)
+				{
+					swap(arr[i], arr[j]);
+					i++;
+					j--;
+				}
+			}
+			while(i<=j);
+
+			if(i<last) qquickSort(arr, i, last);
+			if(first<j) qquickSort(arr, first, j);
 		}
 	else
 		sortInsert(arr, last);
@@ -145,7 +162,7 @@ void blockSort(int* arr, int size)
 		{
 			if(arr[i] % 2 == 1)   //если число нечетное, то пропускаем его
 				continue;
-			indexs[numberOfEven++] = i;   //если четное сохраняем индекс и увеличиваем счетчик
+			indexs[numberOfEven++] = i;
 
 			int d = (arr[i]/digit)%b;
 			//int counter = buckets[d][max];
