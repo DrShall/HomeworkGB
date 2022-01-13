@@ -35,10 +35,8 @@ void depth(int);
 int pop_Stack();
 int push_Stack(int);
 void pop_all();
-void width(int);
 
-bool push_Queue(int);
-bool pop_Queue();
+void nodeCount(int*);
 
 int main()
 {
@@ -58,6 +56,19 @@ int main()
 
 	// Task 2
 	resetVisits();
+
+	int* nodes = new int[size];
+	for(int i = 0; i < size; ++i)
+		nodes[i] = 0;
+
+	nodeCount(nodes);
+	cout << endl;
+	for(int i = 0; i < size; ++i)
+	{
+		cout.width(3);
+		cout << nodes[i];
+	}
+	cout << endl;
 
 	return 0;
 }
@@ -108,68 +119,14 @@ int push_Stack(int d)
 
 }
 
-void width(int start)
+void nodeCount(int* n)
 {
-	push_Queue(start);
-	while(items > 0)
+	for(int i = 0; i < size; ++i)
 	{
-		int ind = pop_Queue();
-	}
-}
-
-bool push_Queue(int d)
-{
-	if(items == size)   //если очередь заполнена возвращаем false
-		return false;
-	else   //иначе сдигаем индекс конца, увиличиваем кол-во и записываем элемент в очередь
-	{
-		queue[finish] = d;
-		finish = (finish + 1) % size;
-		items++;
-	}
-	return true;
-}
-
-bool pop_Queue()
-{
-	if (items == 0)   //если очередь пуста выходим из функции
-		return false;
-
-	int ind = top;   //индекс наибольшего приоритета (меньшее значение)
-
-	// проходим по очереди в поисках первого элемента с наименьшим значением приоритета
-	if(items > 1)
-	{
-		int i = top+1;
-		do
+		for(int j = 0; j < size; ++j)
 		{
-			if(Queue[i].priority < Queue[ind].priority)
-				ind = i;
-			i = (i+1)%size;
+			if(graph[j][i] == 1 && i != j)
+				n[i]++;
 		}
-		while(i != finish);
-		cout.width(4);
-		cout << "Element { " << Queue[ind].data << ", " << Queue[ind].priority << " } is poped." << endl;
 	}
-
-	if(ind == top)
-	{
-		items--;
-		top = (top+1) % size;
-	}
-	else {
-		for(int i = ind; i != finish; i = (i+1)%size)
-		{
-			Queue[i].data = Queue[(i+1)%size].data;
-			Queue[i].priority = Queue[(i+1)%size].priority;
-		}
-		items--;
-		if(finish == 0)
-			finish = size-1;
-		else
-			finish--;
-	}
-
-	return true;
 }
-
