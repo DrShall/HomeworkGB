@@ -17,8 +17,8 @@ class ArrayInt
 		void print();
 		void at(int index, int data);
 		void push_back(int data);
-		void pop_back();
-		void pop_front();
+		int pop_back();
+		int pop_front();
 		void sort();
 };
 

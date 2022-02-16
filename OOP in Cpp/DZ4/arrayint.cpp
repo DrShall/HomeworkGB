@@ -69,18 +69,22 @@ void ArrayInt::push_back(int data)
 	data_[length_ - 1] = data;
 }
 
-void ArrayInt::pop_back()
+int ArrayInt::pop_back()
 {
+	int rez = data_[length_-1];
 	resize(length_ - 1);
+	return rez;
 }
 
-void ArrayInt::pop_front()
+int ArrayInt::pop_front()
 {
+	int rez = data_[0];
 	for(int i = 0; i < length_ - 1; ++i)
 	{
 		data_[i] = data_[i+1];
 	}
 	resize(length_ - 1);
+	return rez;
 }
 
 void ArrayInt::sort()
