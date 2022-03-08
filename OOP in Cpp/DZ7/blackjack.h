@@ -65,7 +65,7 @@ class GenericPlayer : public Hand
 		virtual bool isHitting() const = 0;   //нужна ли еще карта?
 		bool isBusted() const;   // у игрока перебор?
 		void bust() const;   //объявляет имя игрока и объявляет, что у него перебор
-//		virtual ~GenericPlayer();
+		virtual ~GenericPlayer() { }
 };
 
 class Player : public GenericPlayer
@@ -76,7 +76,7 @@ class Player : public GenericPlayer
 		void win() const;   //выводит имя игрока и сообщает, что он выиграл
 		void lose() const;   //выводит имя игрока и сообщает, что он проиграл
 		void push() const;   //выводит имя игрока и сообщает, что он сыграл вничью
-//		virtual ~Player();
+		virtual ~Player() { }
 };
 
 class House : public GenericPlayer
@@ -85,21 +85,29 @@ class House : public GenericPlayer
 		House(const std::string& name = "Dealer") : GenericPlayer(name) { }
 		virtual bool isHitting() const;
 		void flipFirstCard();
-//		virtual ~House();
+		virtual ~House() { }
 };
 
 class Deck : public Hand
 {
 	public:
+		Deck() { cards_.reserve(52); populate(); }
+		void populate();
 		void shuffle();
 		void deal(Hand& inHand);
-
+		void additionalCards(GenericPlayer& aGP);
+		virtual ~Deck() { }
 };
 
 class Blackjack
 {
+		std::vector<Player> players_;
+		House house_;
+		Deck deck_;
 	public:
-		Blackjack();
+		Blackjack(const std::vector<std::string>& names);
+		void play();
+		~Blackjack() { }
 };
 
 #endif // BLACKJACK_H

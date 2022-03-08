@@ -42,7 +42,7 @@
 
 #include <iostream>
 #include <memory>
-//#include "blackjack.h"
+#include "blackjack.h"
 #include "myclasses.h"
 
 using namespace std;
@@ -111,5 +111,36 @@ int main()
 	cout << "date1: " << *date1 << " date2: " << *date2 << endl;
 	swapDate(date1, date2);
 	cout << "date1: " << *date1 << " date2: " << *date2 << endl;
+	}
+
+	// Blackjack
+	{
+		cout << "\t\tWelcome to Blackjack!" << endl;
+
+			int numPlayers = 0;
+			while (numPlayers < 1 || numPlayers > 7)
+			{
+				cout << "How many players? (1 - 7): ";
+				cin >> numPlayers;
+			}
+
+			vector<string> names;
+			string name;
+			for (int i = 0; i < numPlayers; ++i)
+			{
+				cout << "Enter player " << i+1 <<" name: ";
+				cin >> name;
+				names.push_back(name);
+			}
+			cout << endl;
+
+			Blackjack aGame(names);
+			char choice = 'y';
+			while (choice != 'n' && choice != 'N')
+			{
+				aGame.play();
+				cout << endl << "\nDo you want to play again? (Y/N): ";
+				cin >> choice;
+			}
 	}
 }

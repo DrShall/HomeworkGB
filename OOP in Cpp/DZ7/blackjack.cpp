@@ -1,9 +1,10 @@
 #include "blackjack.h"
 #include <iostream>
+#include <algorithm>
 
 Card::Card(SUIT cardSuit, VALUE cardValue): suit_(cardSuit), value_(cardValue)
 {
-	cardBack_ = true;
+	cardBack_ = false;
 }
 
 void Card::flip()
@@ -54,6 +55,8 @@ void Hand::clear()
 
 int Hand::getValue() const
 {
+	if(cards_.empty())
+		return 0;
 	int sum = 0;
 	for(auto it: cards_)
 		sum += it->getValue();
@@ -69,9 +72,7 @@ bool GenericPlayer::isBusted() const
 
 void GenericPlayer::bust() const
 {
-	std::cout << name_ << " ";
-	if(isBusted())
-		std::cout << "busted" << std::endl;
+	std::cout << name_ << " busted" << std::endl;
 }
 
 std::ostream& operator<< ( std::ostream& os, const GenericPlayer& gp)
@@ -80,7 +81,7 @@ std::ostream& operator<< ( std::ostream& os, const GenericPlayer& gp)
 	if(!gp.cards_.empty())
 	{
 		for(auto it: gp.cards_)
-			os << it << "\t";
+			os << *it << "\t";
 		int sum = gp.getValue();
 		if(sum)
 			os << "( " << sum << " )";
@@ -126,3 +127,92 @@ void House::flipFirstCard()
 		std::cout << "No card." << std::endl;
 }
 
+void Deck::populate()
+{
+	clear();
+	SUIT suits;
+	VALUE values;
+	for( int s = spades; s <= hearts; ++s)
+		for( int v = ace; v <= king; ++v)
+			add(new Card( static_cast<SUIT>(s), static_cast<VALUE>(v)));
+}
+
+void Deck::shuffle()
+{
+	std::random_shuffle( cards_.begin(), cards_.end());
+}
+
+void Deck::deal(Hand &inHand)
+{
+	if(cards_.empty())
+		std::cout << "Unable to deal." << std::endl;
+	else
+	{
+		inHand.add(cards_.back());
+		cards_.pop_back();
+	}
+}
+
+void Deck::additionalCards(GenericPlayer &aGP)
+{
+	while( !aGP.isBusted() && aGP.isHitting())
+	{
+		deal(aGP);
+		std::cout << aGP << std::endl;
+		if(aGP.isBusted())
+			aGP.bust();
+	}
+}
+
+Blackjack::Blackjack(const std::vector<std::string>& names)
+{
+	for( auto it: names)
+	{
+		players_.push_back(Player(it));
+		deck_.populate();
+		deck_.shuffle();
+	}
+}
+
+void Blackjack::play()
+{
+	for( int i = 0; i < 2; ++i)
+	{
+		for( auto p: players_)
+		{
+			deck_.deal(p);
+		}
+		deck_.deal(house_);
+	}
+	house_.flipFirstCard();
+
+	for(auto p: players_)
+		deck_.additionalCards(p);
+
+	house_.flipFirstCard();
+	deck_.additionalCards(house_);
+
+	if(house_.isBusted())
+	{
+		for( auto p: players_)
+			if( !p.isBusted())
+				p.win();
+	}
+	else
+	{
+		for( auto p: players_)
+		{
+			if( !p.isBusted())
+			{
+				if(p.getValue() > house_.getValue())
+					p.win();
+				else if(p.getValue() < house_.getValue())
+					p.lose();
+				else
+					p.push();
+			}
+		}
+	}
+	for(auto p: players_)
+		p.clear();
+}
