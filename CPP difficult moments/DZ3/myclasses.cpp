@@ -2,13 +2,17 @@
 
 Matrix::Matrix(int size)
 {
+	srand(time(NULL));
 	size_ = size;
-	M.reserve(size_);
+	std::vector<int> tmp;
 	for(int i = 0; i < size_; ++i)
-		M[i].reserve(size_);
-	for(int i = 0; i < size_; ++i)
+	{
+		tmp.reserve(size);
 		for(int j = 0; j < size_; ++j)
-			M[i][j] = rand() % 10 - 5;
+			tmp.push_back( rand() % 50 - 25 );
+		M.push_back(tmp);
+		tmp.erase(tmp.begin(), tmp.end());
+	}
 }
 void Matrix::print()
 {
@@ -22,31 +26,24 @@ void Matrix::print()
 
 int Matrix::det()
 {
-	int deter = 0;
-
 	if(size_ == 1)
 		return M[0][0];
 
 	if(size_ == 2)
 	{
-		deter = M[0][0]*M[1][1] - M[0][1]*M[1][0];   //
-		std::cout << std::endl << deter << std::endl;   //
-		return deter;
+		return M[0][0]*M[1][1] - M[0][1]*M[1][0];
 	}
 
-
+	int deter = 0;
 	int sig = 1;
-	Matrix modM(size_ -1);
 
 	for(int i = 0; i < size_; ++i)
 	{
+		Matrix modM(size_ -1);
 		modMatrix(modM, i);
-		std::cout << std::endl;   //
-		modM.print();   //
 		deter += sig * M[0][i] * modM.det();
 		sig *= (- 1);
 	}
-	std::cout << std::endl << deter << std::endl;   //
 	return deter;
 }
 

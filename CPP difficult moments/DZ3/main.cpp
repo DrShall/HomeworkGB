@@ -12,6 +12,7 @@
 #include <iostream>
 #include <ctime>
 #include <list>
+#include <array>
 #include "myclasses.h"
 
 using namespace std;
@@ -44,13 +45,21 @@ int main()
 		int size = 4;
 		Matrix matrix(size);
 		matrix.print();
-		cout << matrix.det() << endl;
-//		cout << "Determinate = " << matrix.det() << endl;
+		cout << "Determinate = " << matrix.det() << endl;
 	}
 
 	{ // Task 3
 		cout << endl << "Task 3." << endl;
 
-
+		array<double, 10> arr{0};
+		double v = 1.01;
+		for( MyIter it : arr)
+		{
+			it = v;
+			v += 1.01;
+		}
+		for(MyIter it : arr)
+			cout << *it << " ";
+		cout << endl;
 	}
 }

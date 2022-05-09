@@ -23,8 +23,20 @@ class Matrix
 	public:
 		Matrix(int size);
 		void print();
-		int det();
-		void modMatrix( Matrix& modM, int C );
+		int det();   // определитель матрицы
+		void modMatrix( Matrix& modM, int C );   // заполнение дополнительной матрицы
+};
+
+template<typename T>
+class MyIter
+{
+		T* ptr;
+	public:
+		MyIter() {};
+		MyIter(T& val) { ptr = &val; }
+		void operator=(T val) { *ptr = val; }
+		T operator* () { return *ptr;}
+		void operator++() { ptr++; }
 };
 
 #endif
