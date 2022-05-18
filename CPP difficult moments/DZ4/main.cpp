@@ -17,20 +17,21 @@ a - элемент вектора с дробными числами, b - эле
 
 #include <iostream>
 #include <ctime>
-#include <algorithm>
+#include <math.h>
 #include "myclasses.h"
 
 using namespace std;
 
 int main()
 {
+	srand(time(NULL));
+
 	{ // Task 1
 		cout << endl << "Task 1." << endl;
 
 		int size = 10;
 		vector<int> vec;
 		vec.reserve(size);
-		srand(time(NULL));
 
 		for(int i = 0; i < size; ++i)
 		{
@@ -57,12 +58,21 @@ int main()
 	{ // Task 2
 		cout << endl << "Task 2." << endl;
 
+		int size = 100;
+		vector<double> a(size);
+		cout << "Vector a:" << endl;
+		for_each(a.begin(), a.end(), [size](double &it){ it = ( rand() % (size*size) ) / static_cast<double>(size) - size/2; });
+		for_each(a.begin(), a.end(), [size](double &it){ cout << it << " ";});
+		cout << endl;
 
-	}
+		vector<int> b(size);
+		cout << "Vector b:" << endl;
+		auto it_a = a.begin();
+		for_each(b.begin(), b.end(), [size, it_a](int &it) mutable { it = static_cast<int>(*(it_a++)); });
+		for_each(b.begin(), b.end(), [size](int &it){ cout << it << " "; } );
 
-	{ // Task 3
-		cout << endl << "Task 3." << endl;
-
-
+		double sum = 0.0;
+		for_each(a.begin(), a.end(), [&sum](const double &it){ sum += pow( it - static_cast<int>(it), 2); });
+		cout << endl << "Mistake = " << sum << endl;
 	}
 }

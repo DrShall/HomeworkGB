@@ -1,14 +1,14 @@
 #ifndef MYCLASSES_H
 #define MYCLASSES_H
-#include <string>
-#include <iostream>
+//#include <string>
+//#include <iostream>
 #include <vector>
 #include <algorithm>
 
 template<typename T>
 void insert_sorted(std::vector<T> &v, const T &val)
 {
-	auto in = std::find_if(v.begin(), v.end(), val); //, [](T el, T val){ return val > el;});
+	auto in = std::find_if(v.begin(), v.end(), [&val](const T &el){ return el >= val; });
 	if( in != v.end())
 		v.insert( in, val);
 	else
