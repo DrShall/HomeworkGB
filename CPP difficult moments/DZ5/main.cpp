@@ -52,6 +52,6 @@ int main()
 		countSentence( input_str );
 		cout << endl;
 
-//		cout << input_str << endl;
+		cout << input_str << endl;
 	}
 }

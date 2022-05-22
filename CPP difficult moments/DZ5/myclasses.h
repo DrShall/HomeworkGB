@@ -15,5 +15,5 @@ void printWords(const Iter& it_b, const Iter& it_e)
 }
 
 void countSentence( std::string& str);
-
+bool cmp (std::pair<std::string,int>& p1, std::pair<std::string,int>& p2);
 #endif
