@@ -6,13 +6,18 @@
 #include <vector>
 #include <condition_variable>
 #include <queue>
+#include <random>
+#include <algorithm>
 
 void test_thread(int num);
 
 static std::mutex mt_cout;
+
 static std::mutex sm;
 static std::condition_variable prime_plus;
 static std::queue<size_t> data_i;
+
+static std::mutex things;
 
 class pcout
 {
@@ -35,4 +40,10 @@ class pcout
 };
 
 size_t sieve( size_t n );
+
+void put_thing(std::vector<int> &vec);
+
+void take_thing(std::vector<int> &vec);
+
+void fill_vector(std::vector<int> &vec);
 #endif
