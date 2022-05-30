@@ -46,4 +46,6 @@ void put_thing(std::vector<int> &vec);
 void take_thing(std::vector<int> &vec);
 
 void fill_vector(std::vector<int> &vec);
+
+void progress(size_t n);
 #endif

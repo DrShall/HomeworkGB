@@ -6,6 +6,24 @@ void test_thread(int num)
 	pcout() << "Stop thread " << num << std::endl;
 }
 
+void progress(size_t n)
+{
+	size_t t = 0;
+	while(t < n)   //прогресс нахождения простого числа
+	{
+		std::unique_lock<std::mutex> lk(sm);
+		prime_plus.wait(lk, []{ return !data_i.empty();});
+		size_t tmp = data_i.front();
+		data_i.pop();
+		if(t < tmp)
+		{
+			t = tmp;
+			std::cout << ( t * 100 / static_cast<double>(n)) << "%\t";
+		}
+		lk.unlock();
+	}
+}
+
 size_t sieve( size_t n )   //массив простых чисел и номер простого числа, которое нужно найти
 {
 	size_t num = n * 2;   // число элементов для массива чисел
@@ -21,7 +39,7 @@ size_t sieve( size_t n )   //массив простых чисел и номе�
 	while ( ind < n) {
 			size_t p = primes[ind++];   // запоминаем текущее простое число
 			std::lock_guard<std::mutex> lk(sm);
-			data_i.push(ind);
+			data_i.push(ind+1);
 
 			for (int j = p * 2; j < num; j += p)
 				numbers[j] = 0;   // обнуляем все кратные ему числа в массиве
@@ -71,19 +89,19 @@ void put_thing(std::vector<int> &vec)
 {
 	while(!vec.empty())
 	{
-	std::chrono::milliseconds sec(1000);
-	std::this_thread::sleep_for(sec);
+		std::chrono::milliseconds sec(1000);
+		std::this_thread::sleep_for(sec);
 
-	std::random_device rd;
-	std::mt19937 gen{rd()};
-	std::normal_distribution<> d{100, 50};
+		std::random_device rd;
+		std::mt19937 gen{rd()};
+		std::normal_distribution<> d{100, 50};
 
-	std::lock_guard lkt(things);
-	vec.push_back(0);
-	std::generate(vec.begin(), vec.end(), [&]{ return d(gen); });
-	std::cout << std::endl << "Owner put " << *(vec.end()-1) << std::endl;
-	for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
-	std::cout << std::endl;
+		std::lock_guard lkt(things);
+		vec.push_back(0);
+		std::generate(vec.begin(), vec.end(), [&]{ return d(gen); });
+		std::cout << std::endl << "Owner put " << *(vec.end()-1) << std::endl;
+		for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
+		std::cout << std::endl;
 	}
 	exit(0);
 }
@@ -92,14 +110,14 @@ void take_thing(std::vector<int> &vec)
 {
 	while(!vec.empty())
 	{
-	std::chrono::milliseconds hsec(500);
-	std::this_thread::sleep_for(hsec);
-	std::lock_guard lkt(things);
-	auto it = std::max_element(vec.begin(), vec.end());
-	std::cout << std::endl << "Thief took " << *it << std::endl;
-	vec.erase(it);
-	for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
-	std::cout << std::endl;
+		std::chrono::milliseconds hsec(500);
+		std::this_thread::sleep_for(hsec);
+		std::lock_guard lkt(things);
+		auto it = std::max_element(vec.begin(), vec.end());
+		std::cout << std::endl << "Thief took " << *it << std::endl;
+		vec.erase(it);
+		for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
+		std::cout << std::endl;
 	}
 	exit(0);
 }

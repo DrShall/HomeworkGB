@@ -45,24 +45,18 @@ int main()
 		size_t result = 0;
 		thread primeNum( [&]{ result = sieve(n); } );
 
-		for(size_t i =1; i < n; ++i)   //прогресс нахождения простого числа
-		{
-			unique_lock<mutex> lk(sm);
-			prime_plus.wait(lk, []{ return !data_i.empty();});
-			size_t t = data_i.front();
-			data_i.pop();
-			cout << ( i * 100 / static_cast<double>(t)) << "%";
-			lk.unlock();
-		}
+		thread main(progress, n);
+
 
 		primeNum.join();
+		main.join();
 		cout << endl << "This prime number is " << result << endl;
 	}
 
 	{ // Task 3
 		cout << endl << "Task 3." << endl;
 
-		int vec_size = 20;
+		int vec_size = 2;
 		vector<int> v(vec_size);
 		fill_vector(v);
 
