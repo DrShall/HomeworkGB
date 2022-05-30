@@ -20,7 +20,7 @@ size_t sieve( size_t n )   //массив простых чисел и номе�
 
 	while ( ind < n) {
 			size_t p = primes[ind++];   // запоминаем текущее простое число
-//			std::lock_guard<std::mutex> lk(sm);
+			std::lock_guard<std::mutex> lk(sm);
 			data_i.push(ind);
 
 			for (int j = p * 2; j < num; j += p)
@@ -29,7 +29,7 @@ size_t sieve( size_t n )   //массив простых чисел и номе�
 			while (numbers[p + 1] == 0)
 				p++; // ищем следующее ненулевое число
 
-//			prime_plus.notify_all();
+			prime_plus.notify_all();
 
 			if (p + 1 >= num)   // если выйдем за границы, расширяем массив
 			{
@@ -69,6 +69,8 @@ void fill_vector(std::vector<int> &vec)
 
 void put_thing(std::vector<int> &vec)
 {
+	while(!vec.empty())
+	{
 	std::chrono::milliseconds sec(1000);
 	std::this_thread::sleep_for(sec);
 
@@ -79,12 +81,17 @@ void put_thing(std::vector<int> &vec)
 	std::lock_guard lkt(things);
 	vec.push_back(0);
 	std::generate(vec.begin(), vec.end(), [&]{ return d(gen); });
+	std::cout << std::endl << "Owner put " << *(vec.end()-1) << std::endl;
 	for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
 	std::cout << std::endl;
+	}
+	exit(0);
 }
 
 void take_thing(std::vector<int> &vec)
 {
+	while(!vec.empty())
+	{
 	std::chrono::milliseconds hsec(500);
 	std::this_thread::sleep_for(hsec);
 	std::lock_guard lkt(things);
@@ -93,4 +100,6 @@ void take_thing(std::vector<int> &vec)
 	vec.erase(it);
 	for_each(vec.begin(), vec.end(), [&](int it){ std::cout << it << " "; });
 	std::cout << std::endl;
+	}
+	exit(0);
 }

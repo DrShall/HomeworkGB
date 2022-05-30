@@ -45,15 +45,15 @@ int main()
 		size_t result = 0;
 		thread primeNum( [&]{ result = sieve(n); } );
 
-//		for(size_t i =1; i < n; ++i)   //прогресс нахождения простого числа
-//		{
-//			unique_lock<mutex> lk(sm);
-//			prime_plus.wait(lk, []{ return !data_i.empty();});
-//			size_t t = data_i.front();
-//			data_i.pop();
-//			cout << ( i * 100 / static_cast<double>(t)) << "%";
-//			lk.unlock();
-//		}
+		for(size_t i =1; i < n; ++i)   //прогресс нахождения простого числа
+		{
+			unique_lock<mutex> lk(sm);
+			prime_plus.wait(lk, []{ return !data_i.empty();});
+			size_t t = data_i.front();
+			data_i.pop();
+			cout << ( i * 100 / static_cast<double>(t)) << "%";
+			lk.unlock();
+		}
 
 		primeNum.join();
 		cout << endl << "This prime number is " << result << endl;
@@ -62,18 +62,15 @@ int main()
 	{ // Task 3
 		cout << endl << "Task 3." << endl;
 
-		int vec_size = 5;
+		int vec_size = 20;
 		vector<int> v(vec_size);
 		fill_vector(v);
 
 		for_each(v.begin(), v.end(), [&](int it){ cout << it << " "; });
 
-		while(v.size())
-		{
-			thread owner(put_thing, ref(v));
-			thread thief(take_thing, ref(v));
-			owner.join();
-			thief.join();
-		}
+		thread owner(put_thing, ref(v));
+		thread thief(take_thing, ref(v));
+		owner.join();
+		thief.join();
 	}
 }
